@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - TalentHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f7fafc;
+            color: #000000;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .dashboard-sidebar {
+            width: 280px;
+            background: #1a202c;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .dashboard-header {
+            padding: 2rem;
+            border-bottom: 1px solid #2d3748;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-header h3 {
+            color: #2b6cb0;
+            font-weight: 800;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dashboard-header h3::before {
+            content: "🎯";
+            font-size: 1.2rem;
+        }
+
+        .logout-btn {
+            background: #2d3748;
+            color: #a0aec0;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #4a5568;
+            color: white;
+        }
+
+        .user-profile {
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid #2d3748;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+        }
+
+        .user-info h4 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .user-info p {
+            margin: 0;
+            color: #a0aec0;
+            font-size: 0.9rem;
+        }
+
+        .dashboard-nav {
+            flex: 1;
+            padding: 1rem 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            color: #a0aec0;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: #2d3748;
+            color: white;
+            border-left-color: #2b6cb0;
+        }
+
+        .nav-item span:first-child {
+            font-size: 1.2rem;
+        }
+
+        /* Main Content */
+        .dashboard-main {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .dashboard-section {
+            display: none;
+        }
+
+        .dashboard-section.active {
+            display: block;
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-header p {
+            color: #718096;
+            font-size: 1.1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            width: 60px;
+            height: 60px;
+            background: #e6fffa;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-info h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin: 0;
+        }
+
+        .stat-info p {
+            color: #718096;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .recent-activity {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .recent-activity h3 {
+            margin-bottom: 1.5rem;
+            color: #1a202c;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            background: #f7fafc;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .activity-content p {
+            margin: 0 0 0.25rem 0;
+            color: #4a5568;
+        }
+
+        .activity-time {
+            font-size: 0.8rem;
+            color: #a0aec0;
+        }
+
+        .jobs-table {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .table-header {
+            background: #f7fafc;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            align-items: center;
+        }
+
+        .table-header .table-row {
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .table-body .table-row {
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .table-body .table-row:last-child {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .status-pending {
+            background: #fef5e7;
+            color: #744210;
+        }
+
+        .status-interview {
+            background: #e6fffa;
+            color: #234e52;
+        }
+
+        .status-rejected {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        .status-active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-small:hover {
+            background: #2b6cb0;
+            color: white;
+            border-color: #2b6cb0;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(43, 108, 176, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(43, 108, 176, 0.4);
+        }
+
+        .profile-form,
+        .settings-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-field {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-field label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .form-field input,
+        .form-field textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f7fafc;
+        }
+
+        .form-field input:focus,
+        .form-field textarea:focus {
+            outline: none;
+            border-color: #2b6cb0;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(43, 108, 176, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-ghost:hover {
+            background: #f7fafc;
+            border-color: #2b6cb0;
+            color: #2b6cb0;
+        }
+
+        .messages-container {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .message-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .message-item:last-child {
+            border-bottom: none;
+        }
+
+        .message-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .message-header h4 {
+            margin: 0;
+            color: #1a202c;
+        }
+
+        .message-time {
+            font-size: 0.8rem;
+            color: #a0aec0;
+        }
+
+        .message-content p {
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .settings-group {
+            margin-bottom: 2rem;
+        }
+
+        .settings-group h3 {
+            margin-bottom: 1rem;
+            color: #1a202c;
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e2e8f0;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #2b6cb0;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .setting-info h4 {
+            margin: 0 0 0.25rem 0;
+            color: #1a202c;
+        }
+
+        .setting-info p {
+            margin: 0;
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1024px) {
+            .dashboard-sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 1000;
+            }
+
+            .dashboard-sidebar.open {
+                transform: translateX(0);
+            }
+
+            .dashboard-main {
+                margin-left: 0;
+            }
+
+            .mobile-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1rem 2rem;
+                background: white;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                margin: -2rem -2rem 2rem -2rem;
+            }
+
+            .mobile-menu-btn {
+                background: #2b6cb0;
+                color: white;
+                border: none;
+                padding: 0.5rem;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 1.2rem;
+            }
+
+            .table-row {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-main {
+                padding: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="dashboard-sidebar" id="sidebar">
+            <div class="dashboard-header">
+                <h3>TalentHub</h3>
+                <button class="logout-btn" onclick="logout()" title="Logout">×</button>
+            </div>
+            
+            <div class="user-profile">
+                <div class="user-avatar" id="userAvatar">JD</div>
+                <div class="user-info">
+                    <h4 id="userName">John Doe</h4>
+                    <p id="userRole">Job Seeker</p>
+                </div>
+            </div>
+            
+            <nav class="dashboard-nav">
+                <a href="#" class="nav-item active" onclick="showSection('overview')">
+                    <span>📊</span> Overview
+                </a>
+                <a href="#" class="nav-item" onclick="showSection('jobs')" id="jobsNavItem">
+                    <span>💼</span> <span id="jobsNavText">My Applications</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showSection('profile')">
+                    <span>👤</span> Profile
+                </a>
+                <a href="#" class="nav-item" onclick="showSection('messages')">
+                    <span>💬</span> Messages
+                </a>
+                <a href="#" class="nav-item" onclick="showSection('settings')">
+                    <span>⚙️</span> Settings
+                </a>
+            </nav>
+        </div>
+        
+        <div class="dashboard-main">
+            <div class="mobile-header" style="display: none;">
+                <h2>TalentHub Dashboard</h2>
+                <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+            </div>
+
+            <!-- Overview Section -->
+            <div id="overview-section" class="dashboard-section active">
+                <div class="section-header">
+                    <h2>Dashboard Overview</h2>
+                    <p>Welcome back! Here's what's happening with your job search.</p>
+                </div>
+                
+                <div class="stats-grid" id="jobseekerStats">
+                    <div class="stat-card">
+                        <div class="stat-icon">📝</div>
+                        <div class="stat-info">
+                            <h3>12</h3>
+                            <p>Applications Sent</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">👁️</div>
+                        <div class="stat-info">
+                            <h3>45</h3>
+                            <p>Profile Views</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💬</div>
+                        <div class="stat-info">
+                            <h3>3</h3>
+                            <p>Interview Requests</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-info">
+                            <h3>8</h3>
+                            <p>Saved Jobs</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-grid" id="employerStats" style="display: none;">
+                    <div class="stat-card">
+                        <div class="stat-icon">📋</div>
+                        <div class="stat-info">
+                            <h3>5</h3>
+                            <p>Active Job Posts</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-info">
+                            <h3>127</h3>
+                            <p>Applications Received</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-info">
+                            <h3>23</h3>
+                            <p>Candidates Shortlisted</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-info">
+                            <h3>2</h3>
+                            <p>Positions Filled</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-activity">
+                    <h3>Recent Activity</h3>
+                    <div class="activity-list" id="jobseekerActivity">
+                        <div class="activity-item">
+                            <div class="activity-icon">📝</div>
+                            <div class="activity-content">
+                                <p><strong>Applied to Senior Frontend Developer</strong> at TechCorp</p>
+                                <span class="activity-time">2 hours ago</span>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">👁️</div>
+                            <div class="activity-content">
+                                <p><strong>Profile viewed</strong> by InnovateLab recruiter</p>
+                                <span class="activity-time">1 day ago</span>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">💬</div>
+                            <div class="activity-content">
+                                <p><strong>Interview request</strong> from DataFlow</p>
+                                <span class="activity-time">2 days ago</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="activity-list" id="employerActivity" style="display: none;">
+                        <div class="activity-item">
+                            <div class="activity-icon">👥</div>
+                            <div class="activity-content">
+                                <p><strong>New application</strong> for Product Manager position</p>
+                                <span class="activity-time">1 hour ago</span>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">📋</div>
+                            <div class="activity-content">
+                                <p><strong>Job post published</strong> - DevOps Engineer</p>
+                                <span class="activity-time">3 hours ago</span>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">✅</div>
+                            <div class="activity-content">
+                                <p><strong>Candidate shortlisted</strong> for UX Designer role</p>
+                                <span class="activity-time">1 day ago</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Jobs Section -->
+            <div id="jobs-section" class="dashboard-section">
+                <div class="section-header">
+                    <h2 id="jobsSectionTitle">My Job Applications</h2>
+                    <a href="homepage.html" class="btn btn-primary" id="jobsActionBtn">Apply to More Jobs</a>
+                </div>
+                
+                <div class="jobs-table" id="applicationsTable">
+                    <div class="table-header">
+                        <div class="table-row">
+                            <div class="table-cell">Position</div>
+                            <div class="table-cell">Company</div>
+                            <div class="table-cell">Status</div>
+                            <div class="table-cell">Applied Date</div>
+                            <div class="table-cell">Actions</div>
+                        </div>
+                    </div>
+                    <div class="table-body">
+                        <div class="table-row">
+                            <div class="table-cell">
+                                <strong>Senior Frontend Developer</strong>
+                            </div>
+                            <div class="table-cell">TechCorp</div>
+                            <div class="table-cell">
+                                <span class="status-badge status-pending">Under Review</span>
+                            </div>
+                            <div class="table-cell">Dec 15, 2024</div>
+                            <div class="table-cell">
+                                <button class="btn-small">View Details</button>
+                            </div>
+                        </div>
+                        <div class="table-row">
+                            <div class="table-cell">
+                                <strong>Product Manager</strong>
+                            </div>
+                            <div class="table-cell">InnovateLab</div>
+                            <div class="table-cell">
+                                <span class="status-badge status-interview">Interview Scheduled</span>
+                            </div>
+                            <div class="table-cell">Dec 12, 2024</div>
+                            <div class="table-cell">
+                                <button class="btn-small">View Details</button>
+                            </div>
+                        </div>
+                        <div class="table-row">
+                            <div class="table-cell">
+                                <strong>Data Scientist</strong>
+                            </div>
+                            <div class="table-cell">DataFlow</div>
+                            <div class="table-cell">
+                                <span class="status-badge status-rejected">Not Selected</span>
+                            </div>
+                            <div class="table-cell">Dec 8, 2024</div>
+                            <div class="table-cell">
+                                <button class="btn-small">View Feedback</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="jobs-table" id="jobPostsTable" style="display: none;">
+                    <div class="table-header">
+                        <div class="table-row">
+                            <div class="table-cell">Job Title</div>
+                            <div class="table-cell">Applications</div>
+                            <div class="table-cell">Status</div>
+                            <div class="table-cell">Posted Date</div>
+                            <div class="table-cell">Actions</div>
+                        </div>
+                    </div>
+                    <div class="table-body">
+                        <div class="table-row">
+                            <div class="table-cell">
+                                <strong>Senior Frontend Developer</strong>
+                            </div>
+                            <div class="table-cell">24 applications</div>
+                            <div class="table-cell">
+                                <span class="status-badge status-active">Active</span>
+                            </div>
+                            <div class="table-cell">Dec 10, 2024</div>
+                            <div class="table-cell">
+                                <button class="btn-small">Manage</button>
+                            </div>
+                        </div>
+                        <div class="table-row">
+                            <div class="table-cell">
+                                <strong>Product Manager</strong>
+                            </div>
+                            <div class="table-cell">18 applications</div>
+                            <div class="table-cell">
+                                <span class="status-badge status-active">Active</span>
+                            </div>
+                            <div class="table-cell">Dec 5, 2024</div>
+                            <div class="table-cell">
+                                <button class="btn-small">Manage</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Section -->
+            <div id="profile-section" class="dashboard-section">
+                <div class="section-header">
+                    <h2>Profile Settings</h2>
+                    <p>Keep your profile updated to attract the right opportunities</p>
+                </div>
+                
+                <div class="profile-form">
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label>Full Name</label>
+                            <input type="text" value="John Doe" placeholder="Enter your full name">
+                        </div>
+                        <div class="form-field">
+                            <label>Email</label>
+                            <input type="email" value="john.doe@email.com" placeholder="Enter your email">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label>Phone</label>
+                            <input type="tel" value="+1 (555) 123-4567" placeholder="Enter your phone">
+                        </div>
+                        <div class="form-field">
+                            <label>Location</label>
+                            <input type="text" value="San Francisco, CA" placeholder="Enter your location">
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <label>Professional Summary</label>
+                        <textarea rows="4" placeholder="Write a brief summary about your professional background...">Experienced frontend developer with 5+ years of expertise in React, TypeScript, and modern web technologies. Passionate about creating user-friendly interfaces and scalable applications.</textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn btn-primary">Save Changes</button>
+                        <button class="btn btn-ghost">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages Section -->
+            <div id="messages-section" class="dashboard-section">
+                <div class="section-header">
+                    <h2>Messages</h2>
+                    <p>Communicate with recruiters and employers</p>
+                </div>
+                
+                <div class="messages-container">
+                    <div class="message-item">
+                        <div class="message-avatar">TC</div>
+                        <div class="message-content">
+                            <div class="message-header">
+                                <h4>TechCorp Recruiter</h4>
+                                <span class="message-time">2 hours ago</span>
+                            </div>
+                            <p>Hi John! We reviewed your application for the Senior Frontend Developer position and would like to schedule an interview. Are you available this week?</p>
+                            <button class="btn-small">Reply</button>
+                        </div>
+                    </div>
+                    <div class="message-item">
+                        <div class="message-avatar">IL</div>
+                        <div class="message-content">
+                            <div class="message-header">
+                                <h4>InnovateLab HR</h4>
+                                <span class="message-time">1 day ago</span>
+                            </div>
+                            <p>Thank you for your interest in the Product Manager role. We'll be in touch soon with next steps.</p>
+                            <button class="btn-small">Reply</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div id="settings-section" class="dashboard-section">
+                <div class="section-header">
+                    <h2>Account Settings</h2>
+                    <p>Manage your account preferences and privacy settings</p>
+                </div>
+                
+                <div class="settings-form">
+                    <div class="settings-group">
+                        <h3>Notifications</h3>
+                        <div class="setting-item">
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                            <div class="setting-info">
+                                <h4>Email Notifications</h4>
+                                <p>Receive email updates about job matches and applications</p>
+                            </div>
+                        </div>
+                        <div class="setting-item">
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                            <div class="setting-info">
+                                <h4>SMS Notifications</h4>
+                                <p>Get text messages for urgent updates</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-group">
+                        <h3>Privacy</h3>
+                        <div class="setting-item">
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                            <div class="setting-info">
+                                <h4>Profile Visibility</h4>
+                                <p>Allow recruiters to find your profile in searches</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button class="btn btn-primary">Save Settings</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const userData = localStorage.getItem('currentUser');
+            if (!userData) {
+                window.location.href = 'createaccount.html';
+                return;
+            }
+
+            currentUser = JSON.parse(userData);
+            updateDashboard();
+            
+            // Show mobile header on smaller screens
+            if (window.innerWidth <= 1024) {
+                document.querySelector('.mobile-header').style.display = 'flex';
+            }
+        });
+
+        function updateDashboard() {
+            // Update user info
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userRole').textContent = currentUser.type === 'jobseeker' ? 'Job Seeker' : 'Employer';
+            document.getElementById('userAvatar').textContent = currentUser.avatar;
+
+            // Update dashboard content based on user type
+            const isEmployer = currentUser.type === 'employer';
+            
+            // Update navigation text
+            document.getElementById('jobsNavText').textContent = isEmployer ? 'Job Posts' : 'My Applications';
+            
+            // Update jobs section
+            document.getElementById('jobsSectionTitle').textContent = isEmployer ? 'Manage Job Posts' : 'My Job Applications';
+            document.getElementById('jobsActionBtn').textContent = isEmployer ? 'Post New Job' : 'Apply to More Jobs';
+            
+            // Show/hide appropriate stats
+            document.getElementById('jobseekerStats').style.display = isEmployer ? 'none' : 'grid';
+            document.getElementById('employerStats').style.display = isEmployer ? 'grid' : 'none';
+            
+            // Show/hide appropriate activity
+            document.getElementById('jobseekerActivity').style.display = isEmployer ? 'none' : 'block';
+            document.getElementById('employerActivity').style.display = isEmployer ? 'block' : 'none';
+            
+            // Show/hide appropriate tables
+            document.getElementById('applicationsTable').style.display = isEmployer ? 'none' : 'block';
+            document.getElementById('jobPostsTable').style.display = isEmployer ? 'block' : 'none';
+        }
+
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.dashboard-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionName + '-section').classList.add('active');
+            
+            // Add active class to clicked nav item
+            event.target.closest('.nav-item').classList.add('active');
+            
+            // Close sidebar on mobile
+            if (window.innerWidth <= 1024) {
+                document.getElementById('sidebar').classList.remove('open');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'homepage.html';
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth <= 1024) {
+                document.querySelector('.mobile-header').style.display = 'flex';
+            } else {
+                document.querySelector('.mobile-header').style.display = 'none';
+                document.getElementById('sidebar').classList.remove('open');
+            }
+        });
+    </script>
+</body>
+</html>

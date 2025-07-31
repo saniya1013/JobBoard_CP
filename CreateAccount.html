@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join TalentHub - Create Your Account</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 50%, #3182ce 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            color: #2b6cb0;
+        }
+
+        .signup-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #2b6cb0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .logo h1::before {
+            content: "🎯";
+            font-size: 1.5rem;
+        }
+
+        .signup-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .signup-header h2 {
+            color: #1a202c;
+            font-weight: 700;
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .signup-header p {
+            color: #718096;
+            font-size: 1rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-field {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-field label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+
+        .form-field input,
+        .form-field select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f7fafc;
+        }
+
+        .form-field input:focus,
+        .form-field select:focus {
+            outline: none;
+            border-color: #2b6cb0;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(43, 108, 176, 0.1);
+        }
+
+        .user-type-selection {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .user-type-card {
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f7fafc;
+        }
+
+        .user-type-card:hover {
+            border-color: #2b6cb0;
+            background: white;
+        }
+
+        .user-type-card.selected {
+            border-color: #2b6cb0;
+            background: #e6fffa;
+        }
+
+        .user-type-card .icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .user-type-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 0.25rem;
+        }
+
+        .user-type-card p {
+            font-size: 0.85rem;
+            color: #718096;
+        }
+
+        .terms-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .terms-checkbox input[type="checkbox"] {
+            margin-top: 0.25rem;
+            width: auto;
+        }
+
+        .terms-checkbox label {
+            font-size: 0.9rem;
+            color: #4a5568;
+            line-height: 1.5;
+        }
+
+        .terms-checkbox a {
+            color: #2b6cb0;
+            text-decoration: none;
+        }
+
+        .terms-checkbox a:hover {
+            text-decoration: underline;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(43, 108, 176, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(43, 108, 176, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 1.5rem 0;
+            position: relative;
+            color: #a0aec0;
+            font-size: 0.9rem;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e2e8f0;
+            z-index: 1;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .social-signup {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn-social {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-social:hover {
+            border-color: #2b6cb0;
+            background: #f7fafc;
+        }
+
+        .login-link {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+            color: #718096;
+        }
+
+        .login-link a {
+            color: #2b6cb0;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .back-home {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            color: #718096;
+            text-decoration: none;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-home:hover {
+            color: #2b6cb0;
+            transform: translateX(-2px);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .user-type-selection {
+                grid-template-columns: 1fr;
+            }
+
+            .social-signup {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 1rem;
+            }
+
+            .signup-container {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <a href="homepage.html" class="back-home">←</a>
+        
+        <div class="logo">
+            <h1>TalentHub</h1>
+        </div>
+
+        <div class="signup-header">
+            <h2>Join TalentHub</h2>
+            <p>Create your account and start your career journey</p>
+        </div>
+
+        <form onsubmit="handleSignup(event)">
+            <div class="form-row">
+                <div class="form-field">
+                    <label>First Name</label>
+                    <input type="text" required placeholder="Enter your first name" id="firstName">
+                </div>
+                <div class="form-field">
+                    <label>Last Name</label>
+                    <input type="text" required placeholder="Enter your last name" id="lastName">
+                </div>
+            </div>
+
+            <div class="form-field">
+                <label>Email Address</label>
+                <input type="email" required placeholder="Enter your email" id="signupEmail">
+            </div>
+
+            <div class="form-field">
+                <label>Password</label>
+                <input type="password" required placeholder="Create a strong password" id="signupPassword" minlength="6">
+            </div>
+
+            <div class="form-field">
+                <label>I'm looking to</label>
+                <div class="user-type-selection">
+                    <div class="user-type-card" onclick="selectUserType('jobseeker')">
+                        <span class="icon">🔍</span>
+                        <h3>Find a Job</h3>
+                        <p>Search and apply for opportunities</p>
+                    </div>
+                    <div class="user-type-card" onclick="selectUserType('employer')">
+                        <span class="icon">🏢</span>
+                        <h3>Hire Talent</h3>
+                        <p>Post jobs and find candidates</p>
+                    </div>
+                </div>
+                <input type="hidden" id="userType" required>
+            </div>
+
+            <div class="terms-checkbox">
+                <input type="checkbox" id="agreeTerms" required>
+                <label for="agreeTerms">
+                    I agree to TalentHub's <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="signupBtn" disabled>Create Account</button>
+        </form>
+
+        <div class="divider">
+            <span>or sign up with</span>
+        </div>
+
+        <div class="social-signup">
+            <button class="btn-social">
+                <span>📧</span> Google
+            </button>
+            <button class="btn-social">
+                <span>💼</span> LinkedIn
+            </button>
+        </div>
+
+        <div class="login-link">
+            <p>Already have an account? <a href="createaccount.html">Sign in here</a></p>
+        </div>
+    </div>
+
+    <script>
+        let selectedUserType = '';
+
+        function selectUserType(type) {
+            selectedUserType = type;
+            document.getElementById('userType').value = type;
+            
+            // Update visual selection
+            document.querySelectorAll('.user-type-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            
+            // Enable submit button if all required fields are filled
+            checkFormValidity();
+        }
+
+        function checkFormValidity() {
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const userType = document.getElementById('userType').value;
+            const agreeTerms = document.getElementById('agreeTerms').checked;
+            
+            const isValid = firstName && lastName && email && password && userType && agreeTerms;
+            document.getElementById('signupBtn').disabled = !isValid;
+        }
+
+        function handleSignup(event) {
+            event.preventDefault();
+            
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const userType = document.getElementById('userType').value;
+            
+            // Create user data
+            const userData = {
+                name: `${firstName} ${lastName}`,
+                email: email,
+                type: userType,
+                avatar: `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
+            };
+            
+            // Store user session
+            localStorage.setItem('currentUser', JSON.stringify(userData));
+            
+            // Redirect to dashboard
+            window.location.href = 'dashboard.html';
+        }
+
+        // Add event listeners to form fields
+        document.addEventListener('DOMContentLoaded', function() {
+            const formFields = ['firstName', 'lastName', 'signupEmail', 'signupPassword'];
+            formFields.forEach(fieldId => {
+                document.getElementById(fieldId).addEventListener('input', checkFormValidity);
+            });
+            
+            document.getElementById('agreeTerms').addEventListener('change', checkFormValidity);
+        });
+
+        // Check if user is already logged in
+        if (localStorage.getItem('currentUser')) {
+            window.location.href = 'dashboard.html';
+        }
+    </script>
+</body>
+</html>
